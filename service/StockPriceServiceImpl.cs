@@ -12,7 +12,7 @@ class StockProducerServiceImpl : IStockPriceService
         this.producer = producer;
     }
 
-    public void publicStockPriceService(StockPrice price)
+    public void StockPriceService(StockPrice price)
     {
         throw new NotImplementedException();
     }

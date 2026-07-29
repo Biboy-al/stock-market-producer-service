@@ -5,5 +5,5 @@ using StockMarketProducersService.model;
 
 interface IStockPriceService{
 
-    void publicStockPriceService(StockPrice price);
+    void StockPriceService(StockPrice price);
 }
