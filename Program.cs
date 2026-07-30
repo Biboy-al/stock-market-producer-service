@@ -1,20 +1,25 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using stock_market_producer_service;
 using StockMarketProducersService.port;
+using StockMarketProducersService.worker;
+
+
+var builder = Host.CreateApplicationBuilder(args);
 
 IConfigurationRoot config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
     .Build();
 
-ServiceCollection services = new ServiceCollection();
+string alphaVantageUrl = config["Apis:AlphaVantage:url"] ?? "";
 
-string alphaVantageUrl = config["Apis:AlphaVantage:url"];
-
-services.AddSingleton<IStockDataProvider, AlphaVantageProvider>();
-services.AddHttpClient<IStockDataProvider, AlphaVantageProvider>( client =>
+builder.Services.AddHttpClient<IStockDataProvider, AlphaVantageProvider>( client =>
     client.BaseAddress = new Uri(alphaVantageUrl)
 );
 
-//Buildes the DI Container
-var provider = services.BuildServiceProvider();ß
+builder.Services.AddHostedService<StockMarketProducerWorker>();
+
+var app = builder.Build();
+
+await app.RunAsync();
